@@ -10,10 +10,14 @@ mode = "dark"
 # #009E96 / #33E0D8. This variant follows the wiki — cool field, holographic
 # cyan — with the site's own mint #00FFA2 kept one step brighter.
 #
-# This is a variant, not the shipped theme: Omarchy reads colors.toml from the
-# theme directory, so to use it copy this file over the theme's colors.toml and
-# re-run `omarchy theme set theme-endfield`. Gate it with:
-#   uv run check-contrast.py variants/dark
+# This is a variant, not a second theme: the theme directory's own overrides
+# (shell.bar/menu/launcher/popups.toml, chromium.theme) hold the paper values, so
+# the whole set travels together — copying colors.toml alone leaves the shell and
+# the Chromium frame on paper while the terminals go dark. Copy every file and
+# re-apply (README, "Dark variant"):
+#   cp variants/dark/* ~/.config/omarchy/themes/theme-endfield/
+# Gates:
+#   uv run check-contrast.py variants/dark && uv run check-variant.py
 
 accent = "#FFFA00"
 selection = "#2A3546"

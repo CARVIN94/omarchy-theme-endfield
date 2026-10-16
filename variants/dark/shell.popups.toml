@@ -1,0 +1,11 @@
+# Dark-variant counterpart of ../../shell.popups.toml — bar flyouts, OSD and
+# popup cards. Colours mirror variants/dark/colors.toml; `hyprland.active-border`
+# resolves to the variant's accent, the signal yellow.
+
+[popups]
+background       = "#111827"
+background-alpha = 1.0
+text             = "#E6ECEF"
+border           = "hyprland.active-border"
+border-alpha     = 1.0
+border-width     = 2

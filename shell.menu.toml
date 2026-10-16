@@ -1,11 +1,23 @@
 # Section override: Omarchy merges themes/<name>/shell.<section>.toml into the
 # generated shell.toml, so only the keys this theme really changes live here and
-# every other section keeps following the shipped template.
-#
-# Colours below mirror colors.toml; change both together.
+# every other section keeps following the shipped template. `variants/dark/`
+# ships the counterpart of this file — the key sets must stay identical, and
+# check-variant.py fails when they drift apart.
 #
 # The site marks the chosen row with the signal yellow block and ink text
-# (see the version switcher on endfield.hypergryph.com), never with a tint.
+# (see the version switcher on endfield.hypergryph.com), never with a tint: the
+# selected row is a flat block, so `selected-background-alpha` stays 1.0 and the
+# ink border around it is what separates it from the card.
+#
+# border-width pins the hard rule the house rules ask for. Menu, clipboard,
+# emoji and reminder cards already fall back to 2px (Menu.qml passes
+# Math.max(1, Style.space(2))), so this line pins that reading rather than
+# changing it. These cards answer to [menu]; the standalone launcher shell is
+# drawn by the same plugin and reads the same keys.
+#
+# scrim is the full-screen dim behind the card. The game puts its paper dialogs
+# over an ink field (ASSETS.md), so the paper theme dims with ink instead of
+# washing the desktop towards paper.
 
 [menu]
 background                = "#F6F5EF"
@@ -13,8 +25,9 @@ background-alpha          = 1.0
 text                      = "#191919"
 border                    = "hyprland.active-border-foreground"
 border-alpha              = 1.0
-scrim                     = "#F6F5EF"
-scrim-alpha               = 0.5
+border-width              = 2
+scrim                     = "#191919"
+scrim-alpha               = 0.45
 selected-background       = "#FFFA00"
 selected-background-alpha = 1.0
 selected-text             = "#191919"

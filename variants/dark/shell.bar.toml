@@ -1,0 +1,19 @@
+# Dark-variant counterpart of ../../shell.bar.toml. The theme's section overrides
+# replace a whole generated section, so a variant that swaps colors.toml also has
+# to restate every key the shipped override sets — without this file the bar
+# would keep the paper values while the terminals went dark.
+#
+# Copy the whole set (README, "Dark variant"):
+#   cp variants/dark/* ~/.config/omarchy/themes/theme-endfield/
+#
+# Values mirror variants/dark/colors.toml: field #111827, off-white text
+# #E6ECEF, accent = signal yellow #FFFA00.
+
+[bar]
+background       = "#111827"
+background-alpha = 1.0
+text             = "#E6ECEF"
+active           = "#FFFA00"
+scale-with-font  = true
+size-horizontal  = 26
+size-vertical    = 28

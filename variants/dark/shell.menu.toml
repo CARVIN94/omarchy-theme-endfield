@@ -1,0 +1,22 @@
+# Dark-variant counterpart of ../../shell.menu.toml — menu, clipboard, emojis and
+# reminders. Key set must match the shipped override exactly (check-variant.py);
+# only the values follow variants/dark/colors.toml.
+#
+# The selected row keeps the game's discipline: a flat signal-yellow block with
+# the *field* colour as its ink, so `selected-text` is the near-black background,
+# not the off-white foreground.
+
+[menu]
+background                = "#111827"
+background-alpha          = 1.0
+text                      = "#E6ECEF"
+border                    = "hyprland.active-border-foreground"
+border-alpha              = 1.0
+border-width              = 2
+scrim                     = "#080C14"
+scrim-alpha               = 0.45
+selected-background       = "#FFFA00"
+selected-background-alpha = 1.0
+selected-text             = "#111827"
+selected-border           = "#111827"
+selected-border-alpha     = 1.0

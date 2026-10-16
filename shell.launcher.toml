@@ -1,5 +1,12 @@
 # Section override for the launcher overlay — same signal-yellow selection as
 # [menu], on a slightly translucent card. Colours mirror colors.toml.
+#
+# On Omarchy 4.0.4 nothing reads this section: Color.qml has no `launcher`
+# surface and no QML asks for `launcher.*`, because the standalone launcher is
+# the menu plugin in apps mode and paints from the [menu] keys. The file is kept
+# as the counterpart of the generated [launcher] section (the stock template
+# still emits one) so that a future runner of that section gets the same card
+# this theme gives its menu; the shipped launcher today is [menu].
 
 [launcher]
 background                = "#F6F5EF"
@@ -7,8 +14,9 @@ background-alpha          = 0.95
 text                      = "#191919"
 border                    = "hyprland.active-border-foreground"
 border-alpha              = 1.0
-scrim                     = "#F6F5EF"
-scrim-alpha               = 0.5
+border-width              = 2
+scrim                     = "#191919"
+scrim-alpha               = 0.45
 selected-background       = "#FFFA00"
 selected-background-alpha = 1.0
 selected-text             = "#191919"

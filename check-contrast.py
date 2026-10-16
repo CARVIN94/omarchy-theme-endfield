@@ -5,12 +5,21 @@
 # ///
 """Gate: every colour a theme paints on paper must stay readable on it.
 
-Reads colors.toml next to this script and asserts WCAG contrast ratios:
+Reads colors.toml next to this script (or in the directory given as argv[1]) and
+asserts WCAG contrast ratios:
 
   * body text (foreground, light_foreground, bright_foreground) >= 7.0
   * secondary text (dark_foreground, muted) and accent           >= 4.5
   * the eight terminal colours, normal and bright                >= 4.5
   * text drawn on a selection block (foreground on selection)     >= 7.0
+  * every literal card pair in the theme's own shell.<section>.toml
+    overrides — card text on the card, and selected-row text on
+    the selected block — clears 7.0
+
+Plus one structural rule about the bright row: a `bright_*` value is the softer
+step of its hue, so its luminance may not fall below its base by more than 1%
+(a bright slot darker than the colour it brightens reads as bold text getting
+heavier than body text).
 
 Exit code 0 means the palette passes; 1 lists what it could not read.
 Run: uv run check-contrast.py [theme-dir]
@@ -30,10 +39,16 @@ TERMINAL = (
     "bright_red", "bright_yellow", "bright_green", "bright_cyan",
     "bright_blue", "bright_magenta",
 )
+BRIGHT_PAIRS = ("red", "yellow", "green", "cyan", "blue", "magenta")
+LUMA_TOLERANCE = 0.01
 
 
 def srgb_to_linear(channel: float) -> float:
     return channel / 12.92 if channel <= 0.04045 else ((channel + 0.055) / 1.055) ** 2.4
+
+
+def is_hex(value: object) -> bool:
+    return isinstance(value, str) and bool(re.fullmatch(r"#[0-9a-fA-F]{6}", value))
 
 
 def luminance(hex_colour: str) -> float:
@@ -53,6 +68,33 @@ def contrast(one: str, other: str) -> float:
     return (high + 0.05) / (low + 0.05)
 
 
+def shell_pairs(theme_dir: Path) -> list[tuple[str, str, str, float]]:
+    """Card pairs held as literals in the theme's section overrides.
+
+    These are the colours a dark variant has to restate, and the ones no
+    computed check would otherwise see: `text` on `background`, and
+    `selected-text` on the `selected-background` block.
+    """
+    pairs: list[tuple[str, str, str, float]] = []
+    for path in sorted(theme_dir.glob("shell.*.toml")):
+        if path.name == "shell.toml":
+            continue
+        section_name = path.name[len("shell."):-len(".toml")]
+        section = tomllib.loads(path.read_text()).get(section_name)
+        if not isinstance(section, dict):
+            continue
+        text, card = section.get("text"), section.get("background")
+        if is_hex(text) and is_hex(card):
+            pairs.append((f"{section_name}: text on card", text, card, 7.0))
+        sel_text = section.get("selected-text")
+        sel_card = section.get("selected-background")
+        if is_hex(sel_text) and is_hex(sel_card):
+            pairs.append(
+                (f"{section_name}: selected text on block", sel_text, sel_card, 7.0)
+            )
+    return pairs
+
+
 def main() -> int:
     theme_dir = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).parent
     colours = tomllib.loads((theme_dir / "colors.toml").read_text())
@@ -68,21 +110,39 @@ def main() -> int:
     for key in TERMINAL:
         checks.append((key, key, background, 4.5))
     checks.append(("foreground on selection", "foreground", selection, 7.0))
+    checks.extend(shell_pairs(theme_dir))
 
     failures: list[str] = []
     width = max(len(label) for label, *_ in checks)
     for label, key, against, floor in checks:
-        if key not in colours:
+        if key not in colours and not is_hex(key):
             failures.append(f"{label}: missing from colors.toml")
             continue
-        ratio = contrast(colours[key], against)
+        ratio = contrast(colours.get(key, key), against)
         verdict = "ok" if ratio >= floor else "FAIL"
         print(
-            f"{label:<{width}}  {colours[key]:<8} on {against:<8} "
+            f"{label:<{width}}  {colours.get(key, key):<8} on {against:<8} "
             f"{ratio:5.2f}:1  floor {floor:.1f}  {verdict}"
         )
         if verdict == "FAIL":
             failures.append(f"{label}: {ratio:.2f}:1 < {floor:.1f}:1")
+
+    print()
+    for hue in BRIGHT_PAIRS:
+        bright = colours.get(f"bright_{hue}")
+        if not is_hex(bright) or not is_hex(colours.get(hue)):
+            continue
+        base_luma, bright_luma = luminance(colours[hue]), luminance(bright)
+        verdict = "ok" if bright_luma >= base_luma - LUMA_TOLERANCE else "FAIL"
+        print(
+            f"bright_{hue:<14} {bright} L={bright_luma:.4f} vs {colours[hue]} "
+            f"L={base_luma:.4f}  {verdict}"
+        )
+        if verdict == "FAIL":
+            failures.append(
+                f"bright_{hue}: L={bright_luma:.4f} is darker than "
+                f"{colours[hue]} L={base_luma:.4f}"
+            )
 
     if failures:
         print(f"\nUnreadable on {background}:", file=sys.stderr)

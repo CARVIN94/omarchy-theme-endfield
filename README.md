@@ -58,11 +58,13 @@ omarchy theme set endfield
 | 文件 | 作用 |
 | --- | --- |
 | `colors.toml` | 整套配色。Omarchy 由它渲染 Alacritty、foot、Ghostty、kitty、btop、helix、Neovim、tmux、VS Code、Chromium、Obsidian、Claude 和 shell |
-| `shell.menu.toml`、`shell.launcher.toml`、`shell.popups.toml`、`shell.bar.toml` | 段覆盖，合并进生成的 `shell.toml`；只钉住改动的几个段，其余继续跟随官方模板 |
+| `shell.menu.toml`、`shell.launcher.toml`、`shell.popups.toml`、`shell.bar.toml` | 段覆盖，合并进生成的 `shell.toml`；只钉住改动的几个段，其余继续跟随官方模板。里面是**字面颜色**，所以 `variants/dark/` 必须逐个镜像 |
+| `variants/dark/` | 深色那一半：自己的 `colors.toml`，**以及**配套的段覆盖与 `chromium.theme` |
 | `backgrounds/` | 三张纯色 4K：冷黑 `#111827`、次级纸 `#EDEBE1`，以及兜底 `omarchy.png`（纸白 `#F6F5EF`） |
 | `icons.theme`、`keyboard.rgb`、`chromium.theme` | Yaru-yellow 图标、信号黄键盘灯、纸白 Chromium 边框 |
 | `preview.png` | 主题切换器的缩略图 |
 | `extras/endfield-video-wallpaper` | 可选的视频壁纸启动脚本，见[视频动态壁纸](#视频动态壁纸) |
+| `check-contrast.py`、`check-variant.py` | 两道闸门：颜色可读性，以及"变体必须是一整套" |
 
 **故意不带 `.lua`、终端配置和 `vscode.json`。** Omarchy 会拒绝 stage 从 git 仓库
 克隆来的主题里的这些文件（它们会执行代码或拉起程序），因为这些配置本来就会由
@@ -76,34 +78,55 @@ omarchy theme set endfield
 | `foreground` | `#191919` | 墨 —— 正文与斜纹块填充（官网 CSS 出现 85 次） |
 | `selection` | `#FFFA00` | 信号黄，也是选中行的底色（官网 56 次） |
 | `accent` | `#7D6B00` | 信号黄压暗版，为了在纸白上可读 |
+| `bright_yellow` | `#8A6A00` | wiki 自己叫「Endfield 黄」的琥珀（强档 `#d9ad00`）压暗到纸白可读；终端黄色的 bright 档 |
 | `cyan` | `#0B6E62` | 薄荷信号色压暗版 |
 | `magenta` | `#A3107F` | 品红信号色压暗版 |
 | `blue` | `#35598F` | 主视觉上的技术蓝 |
 
 官网从没用过的色（终端总得有橙、绿、棕）由实测信号色按同一色相压暗派生，
-`check-contrast.py` 会在任何一个掉到 WCAG 底线以下时变红。
+`check-contrast.py` 会在任何一个掉到 WCAG 底线以下时变红 —— 也会在某个 `bright_*`
+比它要提亮的那一档更暗时变红。
 
 ## 设计规矩
 
 规矩来自游戏自己的界面，不来自通用审美：
 
 - 菜单/启动器的选中行是**信号黄底 + 墨字**，不是背景色的一个淡淡染色。
-- 面板用硬 **2px 墨色描边**，不是发丝线。
+- 卡片用硬描边，不是发丝线：菜单、剪贴板、表情、提醒这四张卡给
+  `Border.surfaceSpec` 传的是 `Math.max(1, Style.space(2))`，落到 **2px**；
+  `shell.menu.toml` 把它钉死，免得哪天默认值变细而没人发现。
+- 模态**用墨压暗，不用纸洗白** —— 游戏里纸色对话框是压在墨色场上的
+  （见 [`ASSETS.md`](ASSETS.md)），所以 `[menu].scrim` 取 `#191919` 而不是向卡片色
+  靠拢的一层白洗；何况浅色桌面上那层白洗本来就等于没洗。
 - 直角。shell 的圆角镜像 Hyprland 的 `decoration:rounding`，所以"直角"就是把它设为 `0`。
 - 红色只用于警示与活动强调，取值 `#D72F3B`（游戏实测），按落点底色压暗。
+- ANSI 的 bright 一档永远比它提亮的那一色**更亮**，六个色相同一个方向；
+  `check-contrast.py` 会在某个 `bright_*` 反而更暗时变红。
+
+> 一个 shell 现状：Omarchy 4.0.4 上**没有东西读 `[launcher]`** —— `Color.qml` 没有
+> `launcher` 这个 surface，独立的启动器就是 apps 模式的菜单插件，用的是 `[menu]` 的键。
+> `shell.launcher.toml` 作为生成段的对应物留着（官方模板仍在生成它），但今天你打开的
+> 启动器跟的是 `[menu]`。
 
 ## 深色变体
 
-`variants/dark/colors.toml` 是这套美学的另一半：游戏面板本身。底色与青绿取自
-第三方 wiki（fz.wiki，见 [`ASSETS.md`](ASSETS.md)）的读数 —— 冷蓝黑 `#111827`
+`variants/dark/` 是这套美学的另一半：游戏面板本身。底色与青绿取自第三方 wiki
+（fz.wiki，见 [`ASSETS.md`](ASSETS.md)）的读数 —— 冷蓝黑 `#111827`
 配全息青 `#00C7BD`，官网的薄荷 `#00FFA2` 退到 `bright_cyan` 保留。
 
-它是变体、不是第二个主题：覆盖掉主题里的 `colors.toml` 再 set 即可。
+它是变体、不是第二个主题，而且**是一整套**：本主题的 `shell.<section>.toml` 里写的是
+字面颜色，而段覆盖是**整段替换**（不是合并），所以只拷 `colors.toml` 会让状态栏、
+菜单卡、Chromium 边框留在纸白，而终端、btop、窗口边框已经变深 —— 半套桌面。
+整个目录一起拷：
 
 ```bash
-cp variants/dark/colors.toml ~/.config/omarchy/themes/theme-endfield/colors.toml
+cp variants/dark/* ~/.config/omarchy/themes/theme-endfield/
 omarchy theme set theme-endfield
 ```
+
+`check-variant.py` 会在变体缺文件、缺键时变红，那种半套桌面不会静默回来。装好的主题是
+本仓库的 clone，回到纸白只要
+`git -C ~/.config/omarchy/themes/theme-endfield checkout -- .` 再 set 一次。
 
 ## 视频动态壁纸
 

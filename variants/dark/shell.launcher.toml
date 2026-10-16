@@ -1,0 +1,18 @@
+# Dark-variant counterpart of ../../shell.launcher.toml. Nothing reads the
+# [launcher] section on Omarchy 4.0.4 (see that file) — this exists so the
+# variant set stays complete and a future runner of the section gets a dark card.
+
+[launcher]
+background                = "#111827"
+background-alpha          = 0.95
+text                      = "#E6ECEF"
+border                    = "hyprland.active-border-foreground"
+border-alpha              = 1.0
+border-width              = 2
+scrim                     = "#080C14"
+scrim-alpha               = 0.45
+selected-background       = "#FFFA00"
+selected-background-alpha = 1.0
+selected-text             = "#111827"
+selected-border           = "#111827"
+selected-border-alpha     = 1.0

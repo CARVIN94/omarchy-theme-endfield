@@ -4,6 +4,13 @@ mode = "light"
 # (https://endfield.hypergryph.com) — see ASSETS.md for how each value was
 # measured. Values marked "derived" are shaded from a measured signal colour so
 # that they stay legible on paper white; check-contrast.py enforces that.
+#
+# The bright row is one step *lighter* than the colour it brightens, the same
+# direction for every hue: bold text and the ANSI bright slots read as a softer
+# step, not as a second hue. check-contrast.py fails a bright value that is
+# darker than its base. Yellow has almost no room on paper — #8A6A00 is the
+# lightest gold that still clears 4.5:1 — and it is shaded from the wiki's own
+# "Endfield 黄" amber (#f2cc00 / #d9ad00, ASSETS.md).
 
 accent = "#7D6B00"
 selection = "#FFFA00"
@@ -29,7 +36,7 @@ magenta = "#A3107F"
 brown = "#6B4A28"
 
 bright_red = "#C22A1E"
-bright_yellow = "#6E5E00"
+bright_yellow = "#8A6A00"
 bright_green = "#447429"
 bright_cyan = "#0C7466"
 bright_blue = "#4169A6"

@@ -44,17 +44,46 @@ warning block, exactly as the site styles it.
 selected row follows. The second samples game red `#D72F3B` on `#1D1819`, the
 dark loading screen at `#202020` with yellow `#FCFE34`, and paper dialogs at
 `#EDEBEB` over ink `#1B1918`. That near-black is what the dark variant uses, and
-it is why its `red` is a shaded `#D72F3B` rather than a warmer orange.
+it is why its `red` is a shaded `#D72F3B` rather than a warmer orange. The opus
+is an article (`cv41270760`); its own body sits behind Bilibili's risk control
+(the article endpoint answers `-352`), so the readable part is the opus summary,
+which names the traits the theme takes literally: 现代主义 / 极简主义, 大面积留白,
+基本几何图形（圆方三角）, 扁平, 层级规划清晰, 少量颜色. **Paper dialogs over an ink
+field** is the reading behind `shell.menu.toml`'s ink scrim — the theme dims with
+ink instead of washing the desktop towards paper.
 
 **The third-party wiki** at <https://www.fz.wiki/wiki/武器>, which the theme
 owner pointed at as a good reading of the look. Its Tailwind theme keeps the
 site's own signals — `#FFFA00` for yellow and `#00FFA2` for mint — and adds the
 holographic mint `#00C7BD` / `#009E96` / `#33E0D8` on deep fields `#111827` /
-`#181818` under paper `#F2F1EF`. It is the same split this theme makes: paper for
-the interface, blue-black plus holographic cyan for telemetry — and both ends
-follow it: `variants/dark/colors.toml` takes its field and its cyan from here.
-Values come from its `:root` block, its stylesheet hex counts and its `/deco/`
-and `icon_card/` assets; no artwork from that site is redistributed here.
+`#181818` under paper `#F2F1EF`. Counting the hex values in its stylesheet
+bundle (`/_next/static/chunks/2iorhwvje_rbj.css`, 341 KB) puts that split in
+numbers: `#111827` ×16, `#F2F1EF` ×10, `#181818` ×8, `#F2CC00` ×8, `#FFFA00` ×6,
+`#00FFA2` ×5, `#00C7BD` ×5. It is the same split this theme makes: paper for the
+interface, blue-black plus holographic cyan for telemetry — and both ends follow
+it: `variants/dark/colors.toml` takes its field and its cyan from here. Values
+come from its `:root` block, its stylesheet hex counts and its `/deco/` and
+`icon_card/` assets; no artwork from that site is redistributed here.
+
+The same page carries an accent switcher whose presets are the wiki's own
+reading of the game's signals. Each preset is eight values — `a`/`as`/`af`/`ag`
+(accent, strong, faint, glow) for the light field and `da`/`das`/`daf`/`dag` for
+the dark one, plus `fg` for the text that sits *on* the accent:
+
+| Preset | Light `a` / `as` / `af` / `ag` | Dark `da` / `das` / `daf` / `dag` | `fg` |
+| --- | --- | --- | --- |
+| Endfield 黄 | `#f2cc00` `#d9ad00` `#fff1a6` `#ffd84a` | `#d8bf00` `#b99b00` `#272302` `#ecd548` | `#111827` |
+| 赛博青 | `#00c7bd` `#009e96` `#b3f0ec` `#33e0d8` | `#00c7bd` `#009e96` `#052f2e` `#33e0d8` | `#111827` |
+| 暗焰红 | `#ef4444` `#dc2626` `#fecaca` `#f87171` | `#f87171` `#ef4444` `#2a0a0a` … | `#ffffff` |
+
+Two things in that table are worth keeping. First, the wiki's *own* name for its
+amber is **"Endfield 黄"**: the same yellow the official site spends as
+`#FFFA00`, read one step warmer, with `#111827` — the deep field — as the ink on
+it. That is where the paper palette's `bright_yellow` `#8A6A00` is shaded from
+(the `d9ad00` strong amber, darkened until it clears 4.5:1 on paper white).
+Second, every preset pairs its accent with the *field* as the foreground, never
+with white: the accent block carries the background colour as its ink, which is
+the rule `shell.menu.toml` follows with `selected-text`.
 
 **The community footage** (`BV19q3G6REyu`, `BV1PUdpBLETP`) — frame sampling put
 signal yellow `#FBFA0D` first by area, then rust `#9B8570`, deep blue-black
@@ -64,7 +93,8 @@ above, which is what `variants/dark/colors.toml` uses.
 
 Colours the site never uses (a terminal needs an orange, a green, a brown)
 are shaded from a measured signal so they stay legible on paper white, and
-`check-contrast.py` fails if any of them drops below its WCAG floor.
+`check-contrast.py` fails if any of them drops below its WCAG floor — or if a
+`bright_*` value comes out darker than the colour it brightens.
 
 ## Reference reading
 
