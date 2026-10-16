@@ -112,6 +112,24 @@ work.
 mpvpaper -p -a MAX -o "no-audio loop hwdec=nvdec panscan=1.0" '*' /path/to/video.mp4
 ```
 
+Keep the clips in one directory and swap them by dropping files in. The launcher
+reads that directory at start, plays a single file with `loop`, and writes a
+shuffled `.endfield-playlist.m3u` when there is more than one:
+
+```
+~/.local/share/endfield-wallpaper/      # the clips live here (mp4/webm/mkv/mov)
+~/.local/bin/endfield-video-wallpaper   # what autostart calls; reads that dir
+```
+
+Apply a change without logging out — restart just that one process:
+
+```bash
+pkill -x mpvpaper && ~/.local/bin/endfield-video-wallpaper &
+```
+
+(`-x` matches the process name only. `pkill -f` also matches the shell running
+the command, and kills it.)
+
 **Check the video's width first.** NVDEC on Pascal and older refuses H.264 wider
 than 4096 — a 4302×1920 source silently falls back to software decoding and
 drops most frames at 4K60. Ask the decoder directly:
