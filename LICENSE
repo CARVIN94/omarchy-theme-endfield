@@ -22,6 +22,6 @@ SOFTWARE.
 
 ---
 
-The MIT grant above covers this repository's configuration, scripts and
-generated images only. Artwork belonging to the game is not covered by it —
-see ASSETS.md.
+The MIT grant above covers everything in this repository: the configuration,
+the scripts and the generated background images. No game artwork is shipped —
+see ASSETS.md for where the colours come from.
