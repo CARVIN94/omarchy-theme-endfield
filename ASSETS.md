@@ -28,15 +28,39 @@ Its two recurring idioms are copied directly:
   — the magenta/yellow/mint signal band, redrawn by `signal_band` in
   `make-backgrounds.sh`.
 
-**The community footage** linked as reference (`BV19q3G6REyu`,
-`BV1PUdpBLETP`) — frame sampling put signal yellow `#FBFA0D` first by area,
-then rust `#9B8570`, deep blue-black `#2B4D69` / `#172733` / `#05080B`, mint
-`#8CB4B3` / `#75AFAA` and cool white `#E9E8E5`. That is the basis of
-`variants/dark/colors.toml`.
+**The in-game UI archives** (Bilibili opus `1256332716420366418`,「新版本导览」,
+and `1251580820439695369`,「挽弓试炼」) — sampling the seventeen archived
+screenshots puts the panel fields at neutral near-black `#1E1E19` / `#232323` /
+`#191A1A` / `#202124` and the type at warm off-white `#ECEAEB` / `#F3F2E8`,
+with signal yellow reserved for filled blocks (the selected navigation tab,
+the confirm button). The same archive shows the 45° hatch used as a yellow
+warning block, exactly as the site styles it.
+
+**The community footage** (`BV19q3G6REyu`, `BV1PUdpBLETP`) — frame sampling put
+signal yellow `#FBFA0D` first by area, then rust `#9B8570`, deep blue-black
+`#2B4D69` / `#172733` / `#05080B`, mint `#8CB4B3` / `#75AFAA` and cool white
+`#E9E8E5`. The blue belongs to the scenery; the panels read as the neutral dark
+above, which is what `variants/dark/colors.toml` uses.
 
 Colours the site never uses (a terminal needs an orange, a green, a brown)
 are shaded from a measured signal so they stay legible on paper white, and
 `check-contrast.py` fails if any of them drops below its WCAG floor.
+
+## Reference reading
+
+The design notes this theme was built against, recorded so the reasoning stays
+auditable:
+
+* Harry Huang, *《终末地》UI 设计分析* —
+  <https://blog.harryh.cn/Design/UI-Philosophy-Of-Endfield/> (CC BY-NC-SA 4.0).
+  It names the traits implemented here: the **accent block** (a high-contrast
+  fill marking the selected tab — the signal-yellow selected row), **geometric
+  texture** (a dense grid, and for more polish stacked equal-interval curves —
+  the contour layer on the dark wallpaper), and **restrained corner radius**.
+  Radius is the one trait a theme cannot set: the shell mirrors Hyprland's
+  `decoration:rounding`, so square corners come from that setting.
+* The two Bilibili UI archives above, used as palette evidence for the dark
+  variant.
 
 ## Files in `backgrounds/`
 

@@ -56,18 +56,22 @@ roles each one plays on the site.
 | `magenta` | `#A3107F` | Magenta signal, shaded |
 | `blue` | `#35598F` | The key visual's technical blue |
 
-Two house rules follow the site rather than generic theming:
+House rules, taken from the game's own UI rather than generic theming:
 
 * The selected menu/launcher row is a **signal-yellow block with ink text**,
   never a tint of the background.
 * Panels are framed by a hard **2px ink rule**, not a hairline.
+* Texture is geometric — a dense drafting grid on paper, stacked contour
+  curves on the dark field — and frames stay square. The shell mirrors
+  Hyprland's `decoration:rounding`, so square means `decoration:rounding 0`.
 
 ## Dark variant
 
-`variants/dark/colors.toml` is the other half of the aesthetic: the in-game
-tech look (deep blue-black field, signal yellow, mint, rust) sampled from the
-reference footage. It is a variant, not a second theme — copy it over
-`colors.toml` in a hand-written theme directory and re-apply:
+`variants/dark/colors.toml` is the other half of the aesthetic: the game's own
+panels, sampled from the UI archives listed in `ASSETS.md` — neutral near-black
+fields (`#1E1E19`, `#232323`), warm off-white text, signal yellow filled behind
+the selected tab. It is a variant, not a second theme: copy it over the theme's
+`colors.toml` and re-apply.
 
 ```bash
 cp variants/dark/colors.toml ~/.config/omarchy/themes/endfield/colors.toml

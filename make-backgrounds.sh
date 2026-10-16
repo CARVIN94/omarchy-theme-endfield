@@ -10,8 +10,12 @@
 # backgrounds/omarchy.png is the solid fallback Omarchy uses when a theme has
 # no chosen background — stock themes each ship one, so this theme does too.
 #
-# Requires ImageMagick 7 (magick) and a monospace bold font. Output is written
-# to backgrounds/; the checked-in PNGs are the output of this script.
+# The dark field also carries stacked equal-interval curves: the design
+# write-up referenced in ASSETS.md calls that a higher-order geometric texture
+# than a plain grid.
+#
+# Requires ImageMagick 7 (magick), python3 and a monospace bold font. Output is
+# written to backgrounds/; the checked-in PNGs are the output of this script.
 set -euo pipefail
 
 cd "$(dirname "$0")"
@@ -50,6 +54,35 @@ magick -size 128x128 xc:none -stroke '#ffffff' -strokewidth 2 -fill none \
 magick -size 24x24 xc:none -fill '#26261f' -draw 'polygon 0,24 24,0 24,9 9,24' \
   "$WORK/hatch-dark.png"
 
+# Contour texture: equal-interval curves of a smooth field, drawn small and
+# scaled up so the strokes stay smooth, then screened over the dark field.
+python3 - "$WORK/contour.pgm" <<'PY'
+import math
+import sys
+
+width, height = 960, 540
+levels = (-0.62, -0.36, -0.1, 0.16, 0.42, 0.68)
+half_width = 0.014
+pixels = bytearray(width * height)
+
+for y in range(height):
+    row = y * width
+    cy = y / 300.0
+    for x in range(width):
+        value = math.sin(x / 420.0) * math.cos(cy) + 0.35 * math.sin((x + y) / 700.0)
+        for level in levels:
+            if -half_width < value - level < half_width:
+                pixels[row + x] = 255
+                break
+
+with open(sys.argv[1], "wb") as handle:
+    handle.write(b"P5\n%d %d\n255\n" % (width, height))
+    handle.write(bytes(pixels))
+PY
+
+magick "$WORK/contour.pgm" -resize ${WIDTH}x${HEIGHT}\! -blur 0x2 -level 18%,82% \
+  -alpha set -channel A -evaluate multiply 0.12 +channel "$WORK/contour.png"
+
 # --- helpers -----------------------------------------------------------------
 
 # signal_band <file> <x> <y> — magenta / yellow / mint rule, 16px tall
@@ -84,6 +117,7 @@ signal_band "$OUT/0-paper-grid.png" 192 1736
 magick -size ${WIDTH}x${HEIGHT} xc:"$INK" \
   \( -size ${WIDTH}x${HEIGHT} "tile:$WORK/grid-dark.png" \) -composite \
   \( -size ${WIDTH}x${HEIGHT} "tile:$WORK/hatch-dark.png" \) -composite \
+  "$WORK/contour.png" -compose screen -composite \
   -font "$font" -pointsize 380 -fill "$SIGNAL" -annotate +240+1280 'ENDFIELD' \
   -font "$font" -pointsize 48 -fill '#8A8878' \
   -annotate +252+1400 'ARKNIGHTS: ENDFIELD  //  ENDFIELD INDUSTRIES' \

@@ -1,10 +1,12 @@
 mode = "dark"
 
-# In-game variant: the tech aesthetic of the world itself. Samples from the
-# community reference footage (BV19q3G6REyu, BV1PUdpBLETP) landed on signal
-# yellow #FBFA0D, mint #8CB4B3, deep blue-black #172733 / #05080B and rust
-# #9B8570 — the same signals the site uses, spent on a dark field instead of
-# paper.
+# In-game variant: the panels themselves, not the space scenery.
+#
+# The UI archives referenced in ASSETS.md (Bilibili opus 1256332716420366418
+# and 1251580820439695369) sample as neutral near-black fields — #1E1E19,
+# #232323, #191A1A, #202124 — under warm off-white text (#ECEAEB, #F3F2E8),
+# with signal yellow filled behind the selected tab or the confirm button and
+# the cool mint/blue kept for holographic accents.
 #
 # This is a variant, not the shipped theme: Omarchy reads colors.toml from the
 # theme directory, so to use it copy this file over the theme's colors.toml and
@@ -12,18 +14,18 @@ mode = "dark"
 #   uv run check-contrast.py variants/dark
 
 accent = "#FFFA00"
-selection = "#2B4D69"
-muted = "#7E9294"
+selection = "#3B3B31"
+muted = "#8A8880"
 
-background = "#172733"
-dark_background = "#101B23"
-darker_background = "#05080B"
-lighter_background = "#1F3543"
+background = "#1E1E19"
+dark_background = "#191A1A"
+darker_background = "#0A0A08"
+lighter_background = "#2A2A26"
 
-foreground = "#DCE7E6"
-dark_foreground = "#8CA0A0"
-light_foreground = "#AFD2D2"
-bright_foreground = "#F4FAFA"
+foreground = "#ECEAEB"
+dark_foreground = "#A9A69F"
+light_foreground = "#C9C6C0"
+bright_foreground = "#F6F4EF"
 
 red = "#FF6A4D"
 yellow = "#FFFA00"
