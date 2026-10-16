@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# 终末地动态壁纸：把 ~/.local/share/endfield-wallpaper/ 里的视频铺在所有输出上。
+#
+# 换视频：把视频丢进那个目录（文件名随意，支持 mp4/webm/mkv/mov）。
+#   放 1 个 → 循环播放它
+#   放多个 → 自动轮播（随机顺序，每个播完切下一个）
+# 唯一硬性要求：H.264 的宽度 ≤ 4096，否则 NVDEC 硬解失败、回退软解会掉成幻灯片。
+#   用这条命令自检（没有输出就是没问题）：
+#     mpv --no-config --no-audio --vo=null --hwdec=nvdec -v 视频.mp4 2>&1 | grep 'Failed setup for format cuda'
+set -euo pipefail
+
+command -v mpvpaper >/dev/null 2>&1 || exit 0   # 没装就安静退出，别刷 Hyprland 启动日志
+
+DIR="${ENDFIELD_WALLPAPER_DIR:-$HOME/.local/share/endfield-wallpaper}"
+mapfile -t VIDEOS < <(find "$DIR" -maxdepth 1 -type f \
+  \( -iname '*.mp4' -o -iname '*.webm' -o -iname '*.mkv' -o -iname '*.mov' \) 2>/dev/null | sort)
+
+if (( ${#VIDEOS[@]} == 0 )); then
+  echo "没有动态壁纸：把视频放进 $DIR/" >&2
+  exit 1
+fi
+
+# -p / -a MAX：全屏或最大化窗口遮住壁纸时自动暂停，回到桌面自动继续。
+COMMON="no-audio hwdec=nvdec panscan=1.0"
+
+if (( ${#VIDEOS[@]} == 1 )); then
+  exec mpvpaper -p -a MAX -o "$COMMON loop" '*' "${VIDEOS[0]}"
+fi
+
+PLAYLIST="$DIR/.endfield-playlist.m3u"
+printf '%s\n' "${VIDEOS[@]}" >"$PLAYLIST"
+exec mpvpaper -p -a MAX -o "$COMMON loop-playlist shuffle" '*' "$PLAYLIST"
