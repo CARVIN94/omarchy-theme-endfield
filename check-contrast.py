@@ -85,7 +85,7 @@ def main() -> int:
             failures.append(f"{label}: {ratio:.2f}:1 < {floor:.1f}:1")
 
     if failures:
-        print("\nUnreadable on paper white:", file=sys.stderr)
+        print(f"\nUnreadable on {background}:", file=sys.stderr)
         for line in failures:
             print(f"  - {line}", file=sys.stderr)
         return 1

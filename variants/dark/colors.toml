@@ -1,0 +1,42 @@
+mode = "dark"
+
+# In-game variant: the tech aesthetic of the world itself. Samples from the
+# community reference footage (BV19q3G6REyu, BV1PUdpBLETP) landed on signal
+# yellow #FBFA0D, mint #8CB4B3, deep blue-black #172733 / #05080B and rust
+# #9B8570 — the same signals the site uses, spent on a dark field instead of
+# paper.
+#
+# This is a variant, not the shipped theme: Omarchy reads colors.toml from the
+# theme directory, so to use it copy this file over the theme's colors.toml and
+# re-run `omarchy theme set endfield`. Gate it with:
+#   uv run check-contrast.py variants/dark
+
+accent = "#FFFA00"
+selection = "#2B4D69"
+muted = "#7E9294"
+
+background = "#172733"
+dark_background = "#101B23"
+darker_background = "#05080B"
+lighter_background = "#1F3543"
+
+foreground = "#DCE7E6"
+dark_foreground = "#8CA0A0"
+light_foreground = "#AFD2D2"
+bright_foreground = "#F4FAFA"
+
+red = "#FF6A4D"
+yellow = "#FFFA00"
+orange = "#E0A05A"
+green = "#8FCB6B"
+cyan = "#00FFA2"
+blue = "#6FA8D6"
+magenta = "#FF5CC8"
+brown = "#C0A488"
+
+bright_red = "#FF8A73"
+bright_yellow = "#FFF84D"
+bright_green = "#B0E28F"
+bright_cyan = "#5CFFC4"
+bright_blue = "#9CC8EA"
+bright_magenta = "#FF8AD8"

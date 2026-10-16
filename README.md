@@ -1,0 +1,101 @@
+# omarchy-endfield-theme
+
+An Omarchy theme built from the *Arknights: Endfield* design language: paper
+white, ink black, one signal yellow, 45° warning hatch and drafting grid —
+the way the official site at <https://endfield.hypergryph.com> paints its own
+interface.
+
+![preview](preview.png)
+
+## Install
+
+```bash
+omarchy theme install https://github.com/CARVIN94/omarchy-endfield-theme
+omarchy theme set endfield
+```
+
+The repository is named `omarchy-<name>-theme` on purpose: `omarchy theme
+install` strips the `omarchy-` prefix and the `-theme` suffix, so cloning this
+gives you a theme called **endfield**. (A `omarchy-theme-endfield` repository
+would install as `theme-endfield`.)
+
+To work on it locally, install from the checkout itself and re-run `set` after
+each edit:
+
+```bash
+omarchy theme install /path/to/omarchy-endfield-theme
+omarchy theme set endfield
+```
+
+## What ships
+
+| File | Purpose |
+| --- | --- |
+| `colors.toml` | The whole palette — Omarchy renders Alacritty, foot, Ghostty, kitty, btop, helix, Neovim, tmux, VS Code, Chromium, Obsidian, Claude and the shell from it |
+| `shell.menu.toml`, `shell.launcher.toml`, `shell.popups.toml`, `shell.bar.toml` | Section overrides merged into the generated `shell.toml`, so the rest of the shell keeps following the shipped template |
+| `backgrounds/` | Three wallpapers (two generated, one official key visual) plus the solid `omarchy.png` fallback |
+| `icons.theme`, `keyboard.rgb`, `chromium.theme` | Yaru-yellow icons, signal-yellow keyboard RGB, paper-white Chromium frame |
+| `preview.png` | Theme-switcher thumbnail |
+
+Lua files, terminal configs and `vscode.json` are deliberately absent: Omarchy
+refuses to stage those from a theme cloned out of a git repository, because
+they run code or spawn programs. Everything here is colour.
+
+## The palette
+
+Values are measured, not invented — `ASSETS.md` records the evidence and the
+roles each one plays on the site.
+
+| Token | Value | Role |
+| --- | --- | --- |
+| `background` | `#F6F5EF` | Paper — the site's dominant field |
+| `foreground` | `#191919` | Ink — body copy and hatch fills |
+| `selection` | `#FFFA00` | Signal yellow, also the selected-row block |
+| `accent` | `#7D6B00` | Signal yellow shaded to stay legible on paper |
+| `cyan` | `#0B6E62` | Mint signal, shaded |
+| `magenta` | `#A3107F` | Magenta signal, shaded |
+| `blue` | `#35598F` | The key visual's technical blue |
+
+Two house rules follow the site rather than generic theming:
+
+* The selected menu/launcher row is a **signal-yellow block with ink text**,
+  never a tint of the background.
+* Panels are framed by a hard **2px ink rule**, not a hairline.
+
+## Dark variant
+
+`variants/dark/colors.toml` is the other half of the aesthetic: the in-game
+tech look (deep blue-black field, signal yellow, mint, rust) sampled from the
+reference footage. It is a variant, not a second theme — copy it over
+`colors.toml` in a hand-written theme directory and re-apply:
+
+```bash
+cp variants/dark/colors.toml ~/.config/omarchy/themes/endfield/colors.toml
+omarchy theme set endfield
+```
+
+## Gates
+
+Every foreground must stay readable on the theme's own background. The check
+reads `colors.toml` and fails below the WCAG floor (body text 7:1, secondary
+text and terminal colours 4.5:1):
+
+```bash
+uv run check-contrast.py                 # the shipped paper theme
+uv run check-contrast.py variants/dark   # the dark variant
+```
+
+Wallpapers are generated, not hand-drawn — regenerate and diff after touching
+the palette:
+
+```bash
+./make-backgrounds.sh
+```
+
+## Credits
+
+* Palette, wallpapers and theme files: MIT, see `LICENSE`.
+* The version key visual in `backgrounds/2-danqingdu.png` is © HYPERGRYPH and
+  is **not** MIT — see `ASSETS.md` for its source and how to drop it.
+* *Arknights: Endfield* is a trademark of HYPERGRYPH. This is an unofficial
+  fan theme with no affiliation.
