@@ -59,7 +59,7 @@ omarchy theme set endfield
 | --- | --- |
 | `colors.toml` | 整套配色。Omarchy 由它渲染 Alacritty、foot、Ghostty、kitty、btop、helix、Neovim、tmux、VS Code、Chromium、Obsidian、Claude 和 shell |
 | `shell.menu.toml`、`shell.launcher.toml`、`shell.popups.toml`、`shell.bar.toml` | 段覆盖，合并进生成的 `shell.toml`；只钉住改动的几个段，其余继续跟随官方模板 |
-| `backgrounds/` | 两张 wiki 模块卡片式的等高线背景（冷黑 `#111827` / 纸白），以及纯色兜底 `omarchy.png` |
+| `backgrounds/` | 三张纯色 4K：冷黑 `#111827`、次级纸 `#EDEBE1`，以及兜底 `omarchy.png`（纸白 `#F6F5EF`） |
 | `icons.theme`、`keyboard.rgb`、`chromium.theme` | Yaru-yellow 图标、信号黄键盘灯、纸白 Chromium 边框 |
 | `preview.png` | 主题切换器的缩略图 |
 | `extras/endfield-video-wallpaper` | 可选的视频壁纸启动脚本，见[视频动态壁纸](#视频动态壁纸) |
@@ -185,15 +185,14 @@ uv run check-contrast.py variants/dark   # 深色变体
 ## 素材与出处
 
 配色、背景、证据链（含每个 hex 的出现次数与角色）都在 [`ASSETS.md`](ASSETS.md)。
-一句话版：**仓库里没有任何游戏美术资源** —— 两张背景和兜底色都是
-`make-backgrounds.sh` 自己生成的，所以配置、脚本、图全部 MIT。
-想把官方图当桌面，把自己的图片丢进 `~/.config/omarchy/backgrounds/theme-endfield/`，
-`omarchy theme bg next` 会认。
+一句话版：**仓库里没有任何游戏美术资源** —— 三张背景就是主题自己的主色纯色，
+一行 ImageMagick 就能复现，配置、脚本、图全部 MIT。
+想换自己的图，丢进 `~/.config/omarchy/backgrounds/theme-endfield/`，`omarchy theme bg next` 会认。
 
 ## 致谢
 
 - Harry Huang《[终末地 UI 设计分析](https://blog.harryh.cn/Design/UI-Philosophy-Of-Endfield/)》（CC BY-NC-SA 4.0）—— 强调色块与克制圆角两条规矩来自这篇。
-- <https://www.fz.wiki/wiki/武器> —— 深色变体的冷底与全息青、以及"平面场 + 极淡等高线 + 一个 `//` 标记"的背景做法参照了它。
+- <https://www.fz.wiki/wiki/武器> —— 深色变体的冷底 `#111827` 与全息青 `#00C7BD` 取自它的 `:root`。
 - B 站 UI 存档（[新版本导览](https://www.bilibili.com/opus/1256332716420366418)、[挽弓试炼](https://www.bilibili.com/opus/1251580820439695369)）与[交互拆解](https://www.bilibili.com/opus/1053380062703779875) —— 面板底色、游戏红、加载页黄都从这些截图取色。
 
 ## 许可证
