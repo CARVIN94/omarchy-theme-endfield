@@ -1,9 +1,9 @@
 # omarchy-theme-endfield
 
 An Omarchy theme built from the *Arknights: Endfield* design language: paper
-white, ink black, one signal yellow, 45° warning hatch and drafting grid —
-the way the official site at <https://endfield.hypergryph.com> paints its own
-interface.
+white, ink black, one signal yellow, hard 2px rules and square corners — the
+way the official site at <https://endfield.hypergryph.com> and the game's own
+panels paint their interfaces.
 
 ![preview](preview.png)
 
@@ -39,7 +39,7 @@ omarchy theme set theme-endfield
 | --- | --- |
 | `colors.toml` | The whole palette — Omarchy renders Alacritty, foot, Ghostty, kitty, btop, helix, Neovim, tmux, VS Code, Chromium, Obsidian, Claude and the shell from it |
 | `shell.menu.toml`, `shell.launcher.toml`, `shell.popups.toml`, `shell.bar.toml` | Section overrides merged into the generated `shell.toml`, so the rest of the shell keeps following the shipped template |
-| `backgrounds/` | Three wallpapers (two generated, one official key visual) plus the solid `omarchy.png` fallback |
+| `backgrounds/` | The official version key visual, plus the solid `omarchy.png` fallback Omarchy expects when a theme has no background of its own |
 | `icons.theme`, `keyboard.rgb`, `chromium.theme` | Yaru-yellow icons, signal-yellow keyboard RGB, paper-white Chromium frame |
 | `preview.png` | Theme-switcher thumbnail |
 
@@ -67,9 +67,10 @@ House rules, taken from the game's own UI rather than generic theming:
 * The selected menu/launcher row is a **signal-yellow block with ink text**,
   never a tint of the background.
 * Panels are framed by a hard **2px ink rule**, not a hairline.
-* Texture is geometric — a dense drafting grid on paper, stacked contour
-  curves on the dark field — and frames stay square. The shell mirrors
-  Hyprland's `decoration:rounding`, so square means `decoration:rounding 0`.
+* Frames stay square. The shell mirrors Hyprland's `decoration:rounding`, so
+  square means `decoration:rounding 0`.
+* Red is for warning and event accents only, sampled from the game as
+  `#D72F3B` and shaded for whichever field it lands on.
 
 ## Dark variant
 
@@ -95,16 +96,9 @@ uv run check-contrast.py                 # the shipped paper theme
 uv run check-contrast.py variants/dark   # the dark variant
 ```
 
-Wallpapers are generated, not hand-drawn — regenerate and diff after touching
-the palette:
-
-```bash
-./make-backgrounds.sh
-```
-
 ## Credits
 
-* Palette, wallpapers and theme files: MIT, see `LICENSE`.
+* Palette and theme files: MIT, see `LICENSE`.
 * The version key visual in `backgrounds/2-danqingdu.png` is © HYPERGRYPH and
   is **not** MIT — see `ASSETS.md` for its source and how to drop it.
 * *Arknights: Endfield* is a trademark of HYPERGRYPH. This is an unofficial
