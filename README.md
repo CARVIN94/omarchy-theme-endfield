@@ -59,7 +59,7 @@ omarchy theme set endfield
 | --- | --- |
 | `colors.toml` | 整套配色。Omarchy 由它渲染 Alacritty、foot、Ghostty、kitty、btop、helix、Neovim、tmux、VS Code、Chromium、Obsidian、Claude 和 shell |
 | `shell.menu.toml`、`shell.launcher.toml`、`shell.popups.toml`、`shell.bar.toml` | 段覆盖，合并进生成的 `shell.toml`；只钉住改动的几个段，其余继续跟随官方模板 |
-| `backgrounds/` | 两张 wiki 模块卡片式的等高线背景（冷黑 `#111827` / 纸白）、官方版本主视觉、以及纯色兜底 `omarchy.png` |
+| `backgrounds/` | 两张 wiki 模块卡片式的等高线背景（冷黑 `#111827` / 纸白），以及纯色兜底 `omarchy.png` |
 | `icons.theme`、`keyboard.rgb`、`chromium.theme` | Yaru-yellow 图标、信号黄键盘灯、纸白 Chromium 边框 |
 | `preview.png` | 主题切换器的缩略图 |
 | `extras/endfield-video-wallpaper` | 可选的视频壁纸启动脚本，见[视频动态壁纸](#视频动态壁纸) |
@@ -184,9 +184,11 @@ uv run check-contrast.py variants/dark   # 深色变体
 
 ## 素材与出处
 
-配色、背景、证据链（含每个 hex 的出现次数与角色、每个素材的授权）都在
-[`ASSETS.md`](ASSETS.md)。一句话版：除了官方版本主视觉 `backgrounds/2-danqingdu.png`
-版权归鹰角网络（HYPERGRYPH）、**不在 MIT 覆盖范围内**，其余配置、脚本与生成的背景图都是 MIT。
+配色、背景、证据链（含每个 hex 的出现次数与角色）都在 [`ASSETS.md`](ASSETS.md)。
+一句话版：**仓库里没有任何游戏美术资源** —— 两张背景和兜底色都是
+`make-backgrounds.sh` 自己生成的，所以配置、脚本、图全部 MIT。
+想把官方图当桌面，把自己的图片丢进 `~/.config/omarchy/backgrounds/theme-endfield/`，
+`omarchy theme bg next` 会认。
 
 ## 致谢
 
