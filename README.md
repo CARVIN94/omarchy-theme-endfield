@@ -25,8 +25,6 @@
 字面 hex 计数、17 张游戏内 UI 存档的取色、第三方 wiki 的 `:root`、社区视频抽帧。
 来源、次数、每个值扮演什么角色都记在 [`ASSETS.md`](ASSETS.md)。
 
-![预览](preview.png)
-
 ## 快速安装
 
 需要 Omarchy 4.x（本主题在 4.0.4 上验证）。
@@ -62,7 +60,7 @@ omarchy theme set endfield
 | `variants/dark/` | 深色那一半：自己的 `colors.toml`，**以及**配套的段覆盖与 `chromium.theme` |
 | `backgrounds/` | 三张纯色 4K：冷黑 `#111827`、次级纸 `#EDEBE1`，以及兜底 `omarchy.png`（纸白 `#F6F5EF`） |
 | `icons.theme`、`keyboard.rgb`、`chromium.theme` | Yaru-yellow 图标、信号黄键盘灯、纸白 Chromium 边框 |
-| `preview.png` | 主题切换器的缩略图 |
+| `preview.png` | 主题切换器（`omarchy-theme-switcher` 按约定读它）的缩略图，由 `make-preview.sh` 从 `colors.toml` 生成 —— 纯配色卡，不含任何美术资源 |
 | `extras/endfield-video-wallpaper` | 可选的视频壁纸启动脚本，见[视频动态壁纸](#视频动态壁纸) |
 | `check-contrast.py`、`check-variant.py` | 两道闸门：颜色可读性，以及"变体必须是一整套" |
 
@@ -209,7 +207,8 @@ uv run check-contrast.py variants/dark   # 深色变体
 
 配色、背景、证据链（含每个 hex 的出现次数与角色）都在 [`ASSETS.md`](ASSETS.md)。
 一句话版：**仓库里没有任何游戏美术资源** —— 三张背景就是主题自己的主色纯色，
-一行 ImageMagick 就能复现，配置、脚本、图全部 MIT。
+一行 ImageMagick 就能复现；缩略图 `preview.png` 由 `make-preview.sh` 从 `colors.toml`
+画出来，同样是纯色卡。配置、脚本、图全部 MIT。
 想换自己的图，丢进 `~/.config/omarchy/backgrounds/theme-endfield/`，`omarchy theme bg next` 会认。
 
 ## 致谢
