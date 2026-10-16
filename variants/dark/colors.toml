@@ -2,11 +2,13 @@ mode = "dark"
 
 # In-game variant: the panels themselves, not the space scenery.
 #
-# The UI archives referenced in ASSETS.md (Bilibili opus 1256332716420366418
-# and 1251580820439695369) sample as neutral near-black fields — #1E1E19,
-# #232323, #191A1A, #202124 — under warm off-white text (#ECEAEB, #F3F2E8),
-# with signal yellow filled behind the selected tab or the confirm button and
-# the cool mint/blue kept for holographic accents.
+# Two readings are in play. The UI archives (Bilibili opus 1256332716420366418,
+# 1251580820439695369) sample the shipped panels at neutral *warm* near-black
+# (#1E1E19, #232323) under warm off-white text (#ECEAEB, #F3F2E8). The
+# third-party wiki the owner pointed at (fz.wiki — see ASSETS.md) reads the same
+# screens cool: blue-black #111827 / #181818 with holographic mint #00C7BD /
+# #009E96 / #33E0D8. This variant follows the wiki — cool field, holographic
+# cyan — with the site's own mint #00FFA2 kept one step brighter.
 #
 # This is a variant, not the shipped theme: Omarchy reads colors.toml from the
 # theme directory, so to use it copy this file over the theme's colors.toml and
@@ -14,31 +16,31 @@ mode = "dark"
 #   uv run check-contrast.py variants/dark
 
 accent = "#FFFA00"
-selection = "#3B3B31"
-muted = "#8A8880"
+selection = "#2A3546"
+muted = "#8A9096"
 
-background = "#1E1E19"
-dark_background = "#191A1A"
-darker_background = "#0A0A08"
-lighter_background = "#2A2A26"
+background = "#111827"
+dark_background = "#0D131F"
+darker_background = "#080C14"
+lighter_background = "#1B2436"
 
-foreground = "#ECEAEB"
-dark_foreground = "#A9A69F"
-light_foreground = "#C9C6C0"
-bright_foreground = "#F6F4EF"
+foreground = "#E6ECEF"
+dark_foreground = "#A3A9AE"
+light_foreground = "#C6CCD1"
+bright_foreground = "#F4F8FA"
 
 red = "#F0454F"
 yellow = "#FFFA00"
 orange = "#E0A05A"
 green = "#8FCB6B"
-cyan = "#00FFA2"
+cyan = "#00C7BD"
 blue = "#6FA8D6"
 magenta = "#FF5CC8"
 brown = "#C0A488"
 
-bright_red = "#FF8A73"
+bright_red = "#FF7A80"
 bright_yellow = "#FFF84D"
 bright_green = "#B0E28F"
-bright_cyan = "#5CFFC4"
+bright_cyan = "#00FFA2"
 bright_blue = "#9CC8EA"
 bright_magenta = "#FF8AD8"

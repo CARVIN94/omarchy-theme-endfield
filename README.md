@@ -39,7 +39,7 @@ omarchy theme set theme-endfield
 | --- | --- |
 | `colors.toml` | The whole palette — Omarchy renders Alacritty, foot, Ghostty, kitty, btop, helix, Neovim, tmux, VS Code, Chromium, Obsidian, Claude and the shell from it |
 | `shell.menu.toml`, `shell.launcher.toml`, `shell.popups.toml`, `shell.bar.toml` | Section overrides merged into the generated `shell.toml`, so the rest of the shell keeps following the shipped template |
-| `backgrounds/` | The official version key visual, plus the solid `omarchy.png` fallback Omarchy expects when a theme has no background of its own |
+| `backgrounds/` | Two flat contour backgrounds (deep `#111827`, paper) in the wiki's module-card reading, the official version key visual, and the solid `omarchy.png` fallback |
 | `icons.theme`, `keyboard.rgb`, `chromium.theme` | Yaru-yellow icons, signal-yellow keyboard RGB, paper-white Chromium frame |
 | `preview.png` | Theme-switcher thumbnail |
 
