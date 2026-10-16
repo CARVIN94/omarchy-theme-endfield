@@ -1,0 +1,36 @@
+mode = "light"
+
+# Palette derived from the official Arknights: Endfield site
+# (https://endfield.hypergryph.com) — see ASSETS.md for how each value was
+# measured. Values marked "derived" are shaded from a measured signal colour so
+# that they stay legible on paper white; check-contrast.py enforces that.
+
+accent = "#7D6B00"
+selection = "#FFFA00"
+muted = "#72706A"
+
+background = "#F6F5EF"
+dark_background = "#EDEBE1"
+darker_background = "#E2DFD3"
+lighter_background = "#FDFDFA"
+
+foreground = "#191919"
+dark_foreground = "#6A685F"
+light_foreground = "#3A3A36"
+bright_foreground = "#0A0A0A"
+
+red = "#A8241A"
+yellow = "#7F6D00"
+orange = "#92540F"
+green = "#3F6B2A"
+cyan = "#0B6E62"
+blue = "#35598F"
+magenta = "#A3107F"
+brown = "#6B4A28"
+
+bright_red = "#C22A1E"
+bright_yellow = "#6E5E00"
+bright_green = "#447429"
+bright_cyan = "#0C7466"
+bright_blue = "#4169A6"
+bright_magenta = "#C11398"
