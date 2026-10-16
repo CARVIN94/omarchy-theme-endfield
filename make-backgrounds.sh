@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 # Rebuild the wallpapers from Omarchy's Endfield palette.
 #
-# The palette mirrors the official site's measured values: paper #F6F5EF, ink
-# #191919, signal yellow #FFFA00 and the magenta/yellow/mint signal band. The
-# diagonal hatch is the site's own repeating-linear-gradient(-45deg, #1f1f22
-# 3px, transparent 6px) idiom, redrawn as a tile.
+# The palette mirrors colors.toml and the official site's measured values:
+# paper #F6F5EF, ink #191919, signal yellow #FFFA00 and the magenta/yellow/mint
+# signal band — keep the two files in step. The diagonal hatch is the site's
+# own repeating-linear-gradient(-45deg, #1f1f22 3px, transparent 6px) idiom,
+# redrawn as a tile.
 #
-# background/omarchy.png is the solid fallback Omarchy falls back to when a
-# theme has no chosen background — stock themes each ship one, so this theme
-# does too.
+# backgrounds/omarchy.png is the solid fallback Omarchy uses when a theme has
+# no chosen background — stock themes each ship one, so this theme does too.
 #
 # Requires ImageMagick 7 (magick) and a monospace bold font. Output is written
 # to backgrounds/; the checked-in PNGs are the output of this script.
@@ -58,6 +58,7 @@ signal_band() {
     -fill "$MAGENTA" -draw "rectangle $2,$3 $(( $2 + 240 )),$(( $3 + 16 ))" \
     -fill "$SIGNAL" -draw "rectangle $(( $2 + 240 )),$3 $(( $2 + 720 )),$(( $3 + 16 ))" \
     -fill "$MINT" -draw "rectangle $(( $2 + 720 )),$3 $(( $2 + 960 )),$(( $3 + 16 ))" \
+    -define png:exclude-chunk=time,date,text \
     "$1.tmp"
   mv "$1.tmp" "$1"
 }
@@ -73,6 +74,7 @@ magick -size ${WIDTH}x${HEIGHT} xc:"$PAPER" \
   -stroke "$INK" -strokewidth 4 -fill none \
   -draw "line 192,240 192,360" -draw "line 176,240 208,240" -draw "line 176,360 208,360" \
   -draw "line 3648,1800 3768,1800" -draw "line 3648,1784 3648,1816" -draw "line 3768,1784 3768,1816" \
+  -define png:exclude-chunk=time,date,text \
   "$OUT/0-paper-grid.png"
 
 signal_band "$OUT/0-paper-grid.png" 192 1736
@@ -87,12 +89,14 @@ magick -size ${WIDTH}x${HEIGHT} xc:"$INK" \
   -annotate +252+1400 'ARKNIGHTS: ENDFIELD  //  ENDFIELD INDUSTRIES' \
   -stroke "$SIGNAL" -strokewidth 4 -fill none \
   -draw "line 240,1520 3672,1520" \
+  -define png:exclude-chunk=time,date,text \
   "$OUT/1-signal-hatch.png"
 
 signal_band "$OUT/1-signal-hatch.png" 240 1600
 
 # --- fallback ----------------------------------------------------------------
 
-magick -size ${WIDTH}x${HEIGHT} xc:"$PAPER" "$OUT/omarchy.png"
+magick -size ${WIDTH}x${HEIGHT} xc:"$PAPER" \
+  -define png:exclude-chunk=time,date,text "$OUT/omarchy.png"
 
 echo "wrote $OUT/{0-paper-grid,1-signal-hatch,omarchy}.png"
