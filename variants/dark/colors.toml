@@ -10,7 +10,7 @@ mode = "dark"
 #
 # This is a variant, not the shipped theme: Omarchy reads colors.toml from the
 # theme directory, so to use it copy this file over the theme's colors.toml and
-# re-run `omarchy theme set endfield`. Gate it with:
+# re-run `omarchy theme set theme-endfield`. Gate it with:
 #   uv run check-contrast.py variants/dark
 
 accent = "#FFFA00"

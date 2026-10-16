@@ -1,4 +1,4 @@
-# omarchy-endfield-theme
+# omarchy-theme-endfield
 
 An Omarchy theme built from the *Arknights: Endfield* design language: paper
 white, ink black, one signal yellow, 45° warning hatch and drafting grid —
@@ -10,21 +10,27 @@ interface.
 ## Install
 
 ```bash
-omarchy theme install https://github.com/CARVIN94/omarchy-endfield-theme
-omarchy theme set endfield
+omarchy theme install https://github.com/CARVIN94/omarchy-theme-endfield
+omarchy theme set theme-endfield
 ```
 
-The repository is named `omarchy-<name>-theme` on purpose: `omarchy theme
-install` strips the `omarchy-` prefix and the `-theme` suffix, so cloning this
-gives you a theme called **endfield**. (A `omarchy-theme-endfield` repository
-would install as `theme-endfield`.)
+`omarchy theme install` derives the theme name from the repository name: it
+strips a leading `omarchy-` and a trailing `-theme`, so this repository installs
+as **`theme-endfield`**. To have it as plain `endfield`, rename the installed
+directory — a theme directory you wrote yourself is not held to the safety list
+that applies to cloned ones:
+
+```bash
+mv ~/.config/omarchy/themes/theme-endfield ~/.config/omarchy/themes/endfield
+omarchy theme set endfield
+```
 
 To work on it locally, install from the checkout itself and re-run `set` after
 each edit:
 
 ```bash
-omarchy theme install /path/to/omarchy-endfield-theme
-omarchy theme set endfield
+omarchy theme install /path/to/omarchy-theme-endfield
+omarchy theme set theme-endfield
 ```
 
 ## What ships
@@ -74,8 +80,8 @@ the selected tab. It is a variant, not a second theme: copy it over the theme's
 `colors.toml` and re-apply.
 
 ```bash
-cp variants/dark/colors.toml ~/.config/omarchy/themes/endfield/colors.toml
-omarchy theme set endfield
+cp variants/dark/colors.toml ~/.config/omarchy/themes/theme-endfield/colors.toml
+omarchy theme set theme-endfield
 ```
 
 ## Gates
