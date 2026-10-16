@@ -1,0 +1,16 @@
+# Section override for the launcher overlay — same signal-yellow selection as
+# [menu], on a slightly translucent card. Colours mirror colors.toml.
+
+[launcher]
+background                = "#F6F5EF"
+background-alpha          = 0.95
+text                      = "#191919"
+border                    = "hyprland.active-border-foreground"
+border-alpha              = 1.0
+scrim                     = "#F6F5EF"
+scrim-alpha               = 0.5
+selected-background       = "#FFFA00"
+selected-background-alpha = 1.0
+selected-text             = "#191919"
+selected-border           = "#191919"
+selected-border-alpha     = 1.0

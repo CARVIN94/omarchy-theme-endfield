@@ -1,0 +1,22 @@
+# Section override: Omarchy merges themes/<name>/shell.<section>.toml into the
+# generated shell.toml, so only the keys this theme really changes live here and
+# every other section keeps following the shipped template.
+#
+# Colours below mirror colors.toml; change both together.
+#
+# The site marks the chosen row with the signal yellow block and ink text
+# (see the version switcher on endfield.hypergryph.com), never with a tint.
+
+[menu]
+background                = "#F6F5EF"
+background-alpha          = 1.0
+text                      = "#191919"
+border                    = "hyprland.active-border-foreground"
+border-alpha              = 1.0
+scrim                     = "#F6F5EF"
+scrim-alpha               = 0.5
+selected-background       = "#FFFA00"
+selected-background-alpha = 1.0
+selected-text             = "#191919"
+selected-border           = "#191919"
+selected-border-alpha     = 1.0

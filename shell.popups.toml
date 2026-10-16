@@ -1,0 +1,10 @@
+# Section override for bar flyouts. The site's panel chrome is a hard 2px ink
+# rule rather than a hairline, so this theme asks for one too.
+
+[popups]
+background       = "#F6F5EF"
+background-alpha = 1.0
+text             = "#191919"
+border           = "hyprland.active-border"
+border-alpha     = 1.0
+border-width     = 2
