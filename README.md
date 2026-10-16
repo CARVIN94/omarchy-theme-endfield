@@ -85,6 +85,52 @@ cp variants/dark/colors.toml ~/.config/omarchy/themes/theme-endfield/colors.toml
 omarchy theme set theme-endfield
 ```
 
+## Video wallpaper
+
+Omarchy's own renderer draws stills only: `Background.qml` uses a QML `Image`,
+so pointing the current-background symlink at an `.mp4` renders nothing. Video
+needs a layer-shell player instead — `mpvpaper` is the small one, and this theme
+only has to stay out of its way. It draws on the `background` layer, the same
+layer Omarchy's background service uses, and layer order puts the later surface
+on top; check with `hyprctl layers` (expect `... background: omarchy-background,
+mpvpaper`).
+
+Arch's repos do not carry mpvpaper, but it builds user-level without touching
+pacman:
+
+```bash
+uv tool install meson ninja
+git clone --depth 1 https://github.com/GhostNaN/mpvpaper
+cd mpvpaper && meson setup build --prefix="$HOME/.local" && ninja -C build install
+```
+
+The flag that matters is `-p -a MAX`: mpv pauses whenever a fullscreen or
+maximized window covers the wallpaper, so the video is not decoding while you
+work.
+
+```bash
+mpvpaper -p -a MAX -o "no-audio loop hwdec=nvdec panscan=1.0" '*' /path/to/video.mp4
+```
+
+**Check the video's width first.** NVDEC on Pascal and older refuses H.264 wider
+than 4096 — a 4302×1920 source silently falls back to software decoding and
+drops most frames at 4K60. Ask the decoder directly:
+
+```bash
+mpv --no-config --no-audio --vo=null --hwdec=nvdec -v video.mp4 2>&1 | grep 'Failed setup for format cuda'
+```
+
+Re-encode to 3840 wide and the same file plays at 60 fps with no dropped frames:
+
+```bash
+ffmpeg -i wide.mp4 -vf "scale=3840:-2:flags=lanczos" \
+  -c:v libx264 -preset veryfast -crf 20 -pix_fmt yuv420p -movflags +faststart video.mp4
+```
+
+To start it with the session, one line in `~/.config/hypr/autostart.lua`
+(`o.launch_on_start("endfield-video-wallpaper")` wrapping the command above).
+`omarchy theme bg next` still switches stills if you would rather not run video.
+
 ## Gates
 
 Every foreground must stay readable on the theme's own background. The check
