@@ -21,12 +21,16 @@ if (( ${#VIDEOS[@]} == 0 )); then
 fi
 
 # -p / -a MAX：全屏或最大化窗口遮住壁纸时自动暂停，回到桌面自动继续。
-COMMON="no-audio hwdec=nvdec panscan=1.0"
+#
+# -o 的值必须用**换行**分隔选项：mpvpaper 会把它原样写进 mpv 配置文件再加载，
+# 而 mpv 配置文件的语法是每行一个选项。写成一行空格分隔的话只有第一个选项生效，
+# 其余被 mpv 报 "unparsable extra characters" 丢掉（loop 一丢就是播完一遍就停）。
+COMMON=$'no-audio\nhwdec=nvdec\npanscan=1.0'
 
 if (( ${#VIDEOS[@]} == 1 )); then
-  exec mpvpaper -p -a MAX -o "$COMMON loop" '*' "${VIDEOS[0]}"
+  exec mpvpaper -p -a MAX -o "$COMMON"$'\nloop' '*' "${VIDEOS[0]}"
 fi
 
 PLAYLIST="$DIR/.endfield-playlist.m3u"
 printf '%s\n' "${VIDEOS[@]}" >"$PLAYLIST"
-exec mpvpaper -p -a MAX -o "$COMMON loop-playlist shuffle" '*' "$PLAYLIST"
+exec mpvpaper -p -a MAX -o "$COMMON"$'\nloop\nloop-playlist\nshuffle' '*' "$PLAYLIST"

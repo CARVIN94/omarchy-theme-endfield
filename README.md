@@ -145,8 +145,12 @@ cd mpvpaper && meson setup build --prefix="$HOME/.local" && ninja -C build insta
 参数里最关键的是 `-p -a MAX`：全屏或最大化窗口盖住壁纸时自动暂停 mpv，
 你在干活的时候它不烧 GPU。
 
+`-o` 的值要用 `$'...'` 换行分隔选项：mpvpaper 会把 `-o` 原样写进 mpv 配置文件
+再加载，而配置文件是每行一个选项；写成一行空格分隔只有第一个选项生效，其余被
+mpv 当 "unparsable extra characters" 丢掉（`loop` 一丢就是播完一遍就停）。
+
 ```bash
-mpvpaper -p -a MAX -o "no-audio loop hwdec=nvdec panscan=1.0" '*' /path/to/video.mp4
+mpvpaper -p -a MAX -o $'no-audio\nhwdec=nvdec\npanscan=1.0\nloop' '*' /path/to/video.mp4
 ```
 
 ### 视频放哪、怎么换
