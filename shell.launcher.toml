@@ -1,7 +1,7 @@
 # Section override for the launcher overlay — same signal-yellow selection as
 # [menu], on a slightly translucent card. Colours mirror colors.toml.
 #
-# On Omarchy 4.0.4 nothing reads this section: Color.qml has no `launcher`
+# On Omarchy 4.0.6 nothing reads this section: Color.qml has no `launcher`
 # surface and no QML asks for `launcher.*`, because the standalone launcher is
 # the menu plugin in apps mode and paints from the [menu] keys. The file is kept
 # as the counterpart of the generated [launcher] section (the stock template

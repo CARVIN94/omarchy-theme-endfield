@@ -11,8 +11,14 @@ mode = "light"
 # darker than its base. Yellow has almost no room on paper — #8A6A00 is the
 # lightest gold that still clears 4.5:1 — and it is shaded from the wiki's own
 # "Endfield 黄" amber (#f2cc00 / #d9ad00, ASSETS.md).
+#
+# accent is the gold Omarchy also spends as *text and rules*, not only as a
+# fill: btop's hi_fg and proc_box, the controls section's focus colour and
+# hermes' status_bar_strong all take it. So it has to clear 4.5:1 on the
+# secondary card too (#EDEBE1), not just on paper — #7D6B00 read 4.84 on paper
+# but 4.42 on the card. #756400 is the brightest gold that holds on both.
 
-accent = "#7D6B00"
+accent = "#756400"
 selection = "#FFFA00"
 muted = "#72706A"
 

@@ -9,8 +9,11 @@
 # (ASSETS.md: no game artwork ships here), so every pixel is this repository's
 # own and the card is small enough to diff.
 #
-# Label colour follows the theme's own rule for text on a block: a swatch gets
-# the field colour as ink when it is dark, and the ink colour when it is light.
+# Label colour follows the theme's own rule for text on a block: a swatch takes
+# whichever of the field colour and the ink colour reads better on it. Picking
+# by luminance instead ("dark swatch -> field, light swatch -> ink") gets the
+# mid-tone swatches wrong: the accent is darker than the ink is light, so that
+# rule paints ink on it at 3.3:1 when the field colour would read at 4.8:1.
 set -euo pipefail
 
 cd "$(dirname "$0")"
@@ -55,6 +58,27 @@ luminance() {
     }'
 }
 
+# WCAG contrast ratio, printed as a 0-4 digit integer scaled by 10000, so the
+# caller can compare two candidates without floating point.
+contrast() {
+  local one two
+  one=$(luminance "$1")
+  two=$(luminance "$2")
+  awk -v a="$one" -v b="$two" 'BEGIN {
+    high = a > b ? a : b
+    low  = a > b ? b : a
+    printf "%d", ((high + 500) / (low + 500)) * 10000
+  }'
+}
+
+# The label that reads better on a swatch of this colour.
+label_on() {
+  local colour="$1" on_paper on_ink
+  on_paper=$(contrast "$PAPER" "$colour")
+  on_ink=$(contrast "$INK" "$colour")
+  if (( on_paper >= on_ink )); then printf '%s' "$PAPER"; else printf '%s' "$INK"; fi
+}
+
 # #RRGGBB + alpha -> the rgba() form ImageMagick's -stroke wants.
 rgba_of() {
   local hex="${1#\#}"
@@ -94,9 +118,9 @@ for token in "${TOKENS[@]}"; do
   right=$((x + swatch_width))
   top=$((BAND_TOP + row * row_height))
 
-  # A dark swatch takes the field colour as its ink; a light one takes the ink —
-  # the theme's own rule for text sitting on a block.
-  if (( $(luminance "$colour") < $(luminance "$ACCENT") )); then label="$PAPER"; else label="$INK"; fi
+  # A swatch takes whichever of the field colour and the ink colour reads
+  # better on it — the theme's own rule for text sitting on a block.
+  label=$(label_on "$colour")
 
   args+=(
     -stroke "$(rgba_of "$label" 0.4)" -strokewidth 1 -fill "$colour" \

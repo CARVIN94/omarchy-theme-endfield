@@ -18,9 +18,15 @@ desktop is what this gate exists to catch:
   * for every `shell.<section>.toml` the theme ships, the variant ships the
     same file with the same key set — no missing key (it would silently inherit
     the shipped literal) and no extra key (the section would lose it);
+  * every hex literal in a `shell.<section>.toml` is a value its own
+    `colors.toml` defines. Matching key sets alone let the palette and the
+    overrides drift apart: change `colors.toml` and leave the old literal in
+    the section and the desktop is half-swapped again, with both gates green.
+    A section may only name a palette *value*, never invent one;
   * `chromium.theme` is mirrored, since it is one palette value read straight
-    from the theme directory. `icons.theme` and `keyboard.rgb` are not: they
-    carry the signal yellow both variants share;
+    from the theme directory, and it must equal that palette's `background`.
+    `icons.theme` and `keyboard.rgb` are not: they carry the signal yellow both
+    variants share;
   * the variant directory holds no file the theme itself does not ship.
 
 Exit code 0 means every variant is complete; 1 lists what is missing.
@@ -29,17 +35,53 @@ Run: uv run check-variant.py
 
 from __future__ import annotations
 
+import re
 import sys
 import tomllib
 from pathlib import Path
 
 MIRRORED = ("chromium.theme",)
+HEX = re.compile(r"#[0-9a-fA-F]{6}\b")
 
 
 def section_keys(path: Path) -> set[str]:
     section_name = path.name[len("shell."):-len(".toml")]
     section = tomllib.loads(path.read_text()).get(section_name)
     return set(section) if isinstance(section, dict) else set()
+
+
+def palette_values(colours_file: Path) -> set[str]:
+    """Every colour a palette defines, lowercased for comparison."""
+    palette = tomllib.loads(colours_file.read_text())
+    return {value.lower() for value in palette.values() if isinstance(value, str)}
+
+
+def literal_colours(section_file: Path) -> set[str]:
+    """Hex literals written straight into a section override."""
+    return {match.lower() for match in HEX.findall(section_file.read_text())}
+
+
+def chromium_colour(path: Path) -> str:
+    """`chromium.theme` holds `R,G,B`, which is a palette colour spelled differently."""
+    r, g, b = (int(part) for part in path.read_text().strip().split(","))
+    return f"#{r:02x}{g:02x}{b:02x}"
+
+
+def check_literals(name: str, dir: Path, colours_file: Path) -> list[str]:
+    """Every hex in a section override must be a value that palette defines."""
+    failures: list[str] = []
+    if not colours_file.is_file():
+        return failures
+    known = palette_values(colours_file)
+    for section_file in sorted(dir.glob("shell.*.toml")):
+        if section_file.name == "shell.toml":
+            continue
+        for colour in sorted(literal_colours(section_file) - known):
+            failures.append(
+                f"{name}: {section_file.name} writes {colour.upper()}, which "
+                f"{colours_file.name} does not define"
+            )
+    return failures
 
 
 def main() -> int:
@@ -56,6 +98,16 @@ def main() -> int:
     }
 
     failures: list[str] = []
+    failures.extend(check_literals("theme", theme_dir, theme_dir / "colors.toml"))
+    shipped_chromium = theme_dir / "chromium.theme"
+    if shipped_chromium.is_file():
+        expected = chromium_colour(shipped_chromium)
+        if expected not in palette_values(theme_dir / "colors.toml"):
+            failures.append(
+                f"theme: chromium.theme is {expected.upper()}, which colors.toml "
+                f"does not define"
+            )
+
     for variant in sorted(p for p in variants_dir.iterdir() if p.is_dir()):
         name = f"variants/{variant.name}"
         colours_file = variant / "colors.toml"
@@ -69,6 +121,8 @@ def main() -> int:
             ):
                 for key in sorted(missing):
                     failures.append(f"{name}: {prefix} {key!r}")
+
+        failures.extend(check_literals(name, variant, colours_file))
 
         for file_name, shipped_keys in shipped_sections.items():
             candidate = variant / file_name
@@ -84,6 +138,15 @@ def main() -> int:
         for file_name in MIRRORED:
             if (theme_dir / file_name).is_file() and not (variant / file_name).is_file():
                 failures.append(f"{name}: no {file_name}")
+                continue
+            candidate = variant / file_name
+            if candidate.is_file() and colours_file.is_file():
+                expected = chromium_colour(candidate)
+                if expected not in palette_values(colours_file):
+                    failures.append(
+                        f"{name}: {file_name} is {expected.upper()}, which its "
+                        f"colors.toml does not define"
+                    )
 
         for path in sorted(variant.iterdir()):
             if path.is_file() and not (theme_dir / path.name).is_file():

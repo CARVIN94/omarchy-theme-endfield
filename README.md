@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-10b981?style=flat-square" alt="MIT license"></a>
-  <img src="https://img.shields.io/badge/Omarchy-4.0.4-4d6bfe?style=flat-square" alt="Omarchy 4.0.4">
+  <img src="https://img.shields.io/badge/Omarchy-4.0.6-4d6bfe?style=flat-square" alt="Omarchy 4.0.6">
   <img src="https://img.shields.io/badge/%E9%85%8D%E8%89%B2-%E5%AE%9E%E6%B5%8B%E5%8F%96%E8%89%B2-ffd400?style=flat-square" alt="配色为实测取色">
 </p>
 
@@ -27,7 +27,7 @@
 
 ## 快速安装
 
-需要 Omarchy 4.x（本主题在 4.0.4 上验证）。
+需要 Omarchy 4.x（本主题在 4.0.6 上验证）。
 
 ```bash
 omarchy theme install https://github.com/CARVIN94/omarchy-theme-endfield
@@ -62,7 +62,7 @@ omarchy theme set endfield
 | `icons.theme`、`keyboard.rgb`、`chromium.theme` | Yaru-yellow 图标、信号黄键盘灯、纸白 Chromium 边框 |
 | `preview.png` | 主题切换器（`omarchy-theme-switcher` 按约定读它）的缩略图，由 `make-preview.sh` 从 `colors.toml` 生成 —— 纯配色卡，不含任何美术资源 |
 | `extras/endfield-video-wallpaper` | 可选的视频壁纸启动脚本，见[视频动态壁纸](#视频动态壁纸) |
-| `check-contrast.py`、`check-variant.py` | 两道闸门：颜色可读性，以及"变体必须是一整套" |
+| `check-contrast.py`、`check-variant.py`、`check.sh` | 三道闸门 + 一个入口：颜色可读性、"变体必须是一整套"、缩略图没走样；`bash check.sh` 全跑一遍 |
 
 **故意不带 `.lua`、终端配置和 `vscode.json`。** Omarchy 会拒绝 stage 从 git 仓库
 克隆来的主题里的这些文件（它们会执行代码或拉起程序），因为这些配置本来就会由
@@ -75,7 +75,7 @@ omarchy theme set endfield
 | `background` | `#F6F5EF` | 纸 —— 官网的主导底色（首页 207 万像素里占 110 万） |
 | `foreground` | `#191919` | 墨 —— 正文与斜纹块填充（官网 CSS 出现 85 次） |
 | `selection` | `#FFFA00` | 信号黄，也是选中行的底色（官网 56 次） |
-| `accent` | `#7D6B00` | 信号黄压暗版，为了在纸白上可读 |
+| `accent` | `#756400` | 信号黄压暗版。Omarchy 不止拿它当填充，还当字和线用（btop 的 `hi_fg`、controls 的焦点色、hermes 的状态栏强字），所以它得在纸白和次级卡片上都可读 |
 | `bright_yellow` | `#8A6A00` | wiki 自己叫「Endfield 黄」的琥珀（强档 `#d9ad00`）压暗到纸白可读；终端黄色的 bright 档 |
 | `cyan` | `#0B6E62` | 薄荷信号色压暗版 |
 | `magenta` | `#A3107F` | 品红信号色压暗版 |
@@ -83,7 +83,8 @@ omarchy theme set endfield
 
 官网从没用过的色（终端总得有橙、绿、棕）由实测信号色按同一色相压暗派生，
 `check-contrast.py` 会在任何一个掉到 WCAG 底线以下时变红 —— 也会在某个 `bright_*`
-比它要提亮的那一档更暗时变红。
+不更亮时变红。它检查的底色不只是纸白：官方模板真的往上面放字的那些面
+（hermes 状态栏、t3code 侧栏、helix 的焦点行、btop 的选中行）也一起量。
 
 ## 设计规矩
 
@@ -97,11 +98,14 @@ omarchy theme set endfield
   （见 [`ASSETS.md`](ASSETS.md)），所以 `[menu].scrim` 取 `#191919` 而不是向卡片色
   靠拢的一层白洗；何况浅色桌面上那层白洗本来就等于没洗。
 - 直角。shell 的圆角镜像 Hyprland 的 `decoration:rounding`，所以"直角"就是把它设为 `0`。
-- 红色只用于警示与活动强调，取值 `#D72F3B`（游戏实测），按落点底色压暗。
+- 红色**只给删除**。告警、待审、失败一律用黄块和墨线，终端里的 `red` 也一样
+  不当警示牌用；取值纸白 `#A8241A`、深色 `#F0454F`，都是从游戏实测的 `#D72F3B`
+  按落点底色压暗或提亮得来（`ASSETS.md`）。
 - ANSI 的 bright 一档永远比它提亮的那一色**更亮**，六个色相同一个方向；
-  `check-contrast.py` 会在某个 `bright_*` 反而更暗时变红。
+  `check-contrast.py` 会在某个 `bright_*` 不更亮时变红。
+- 弹窗描边取墨不取金：纸白上黄色是**填充**，不是线（1.1:1，根本看不见）。
 
-> 一个 shell 现状：Omarchy 4.0.4 上**没有东西读 `[launcher]`** —— `Color.qml` 没有
+> 一个 shell 现状：Omarchy 4.0.6 上**没有东西读 `[launcher]`** —— `Color.qml` 没有
 > `launcher` 这个 surface，独立的启动器就是 apps 模式的菜单插件，用的是 `[menu]` 的键。
 > `shell.launcher.toml` 作为生成段的对应物留着（官方模板仍在生成它），但今天你打开的
 > 启动器跟的是 `[menu]`。
@@ -199,12 +203,32 @@ ffmpeg -i wide.mp4 -vf "scale=3840:-2:flags=lanczos" \
 
 ## 闸门
 
-每个前景色都必须在自己那套底色上可读。脚本读 `colors.toml`，低于 WCAG 底线就报错
-（正文 7:1，次级文字与终端色 4.5:1）：
+一条命令跑全部，不需要联网：
+
+```bash
+bash check.sh
+```
+
+它按顺序跑四道：
+
+1. **配色可读性**（`check-contrast.py`，两套 palette 各一次）。正文 7:1，次级文字与
+   终端色 4.5:1。量得不只是纸白：官方模板真的往上面放字的那些面也一起量 ——
+   hermes 状态栏与 t3code 侧栏的 `dark_background`、helix 焦点行的
+   `lighter_background`、btop 选中行的 `selection`。只量纸白会漏掉整整一层。
+2. **变体是一整套**（`check-variant.py`）：`variants/` 里每个段覆盖都得有同键集合，
+   而且**每个字面 hex 必须是它自己 `colors.toml` 定义过的值**。只对键名不对值，
+   palette 改了而覆盖还留着旧字面，桌面会半新半旧地静默错位。
+3. **`preview.png` 没走样**：把 `make-preview.sh` 重跑到临时目录再逐字节比对。
+   生成器是确定性的（没有时间戳、没有随机），所以这条是真正的测试而不是形式。
+4. 上面任一失败就 `exit 1`，并列出是哪一道。
+
+单独跑某一项也可以：
 
 ```bash
 uv run check-contrast.py                 # 出厂纸白主题
 uv run check-contrast.py variants/dark   # 深色变体
+uv run check-variant.py                  # 变体完整性
+bash make-preview.sh                     # 重画缩略图（改了配色就该跑）
 ```
 
 ## 素材与出处

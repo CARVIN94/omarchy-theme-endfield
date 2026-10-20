@@ -1,12 +1,13 @@
 # Section override for the bar. `active` is the colour a module takes when it
 # wants attention (recording, alerts, updates); the site spends signal yellow
-# there, shaded to stay legible on paper white.
+# there, shaded to stay legible on paper white and on the secondary card the
+# shell draws behind a module (check-contrast.py gates both surfaces).
 
 [bar]
 background       = "#F6F5EF"
 background-alpha = 1.0
 text             = "#191919"
-active           = "#7D6B00"
+active           = "#756400"
 scale-with-font  = true
 size-horizontal  = 26
 size-vertical    = 28

@@ -42,8 +42,11 @@ blue = "#6FA8D6"
 magenta = "#FF5CC8"
 brown = "#C0A488"
 
+# The bright row steps *up*, never down: the previous bright_yellow (#FFF84D)
+# measured below its own base on the deep field, which is exactly the
+# "bold text heavier than body text" reading the bright row forbids.
 bright_red = "#FF7A80"
-bright_yellow = "#FFF84D"
+bright_yellow = "#FFFF66"
 bright_green = "#B0E28F"
 bright_cyan = "#00FFA2"
 bright_blue = "#9CC8EA"

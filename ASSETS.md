@@ -29,6 +29,13 @@ than as wallpaper:
 * `linear-gradient(90deg, #ff00f0 11.25rem, #fffa00 0, #fffa00 22.5625rem, #00ffa2 0)`
   — the magenta/yellow/mint signal band.
 
+Neither pattern ships in this theme, and neither can: Omarchy themes contribute
+colours, and a `colors.toml` has no way to paint a hatch or a three-stop band.
+What travels instead is the *reading* of them — signal colour as a filled block
+with ink on it (the selected row), and a hard ink rule rather than a hairline
+(the cards). If you are looking for the stripes in the theme directory, they
+are not there by design.
+
 **The in-game UI archives** (Bilibili opus `1256332716420366418`,「新版本导览」,
 and `1251580820439695369`,「挽弓试炼」) — sampling the seventeen archived
 screenshots puts the panel fields at neutral near-black `#1E1E19` / `#232323` /
@@ -44,7 +51,9 @@ warning block, exactly as the site styles it.
 selected row follows. The second samples game red `#D72F3B` on `#1D1819`, the
 dark loading screen at `#202020` with yellow `#FCFE34`, and paper dialogs at
 `#EDEBEB` over ink `#1B1918`. That near-black is what the dark variant uses, and
-it is why its `red` is a shaded `#D72F3B` rather than a warmer orange. The opus
+the sampled red is the hue both palettes shade from: `#A8241A` on paper and
+`#F0454F` on the deep field are that hue moved until it clears 4.5:1 on its own
+surface, not a warmer orange. The opus
 is an article (`cv41270760`); its own body sits behind Bilibili's risk control
 (the article endpoint answers `-352`), so the readable part is the opus summary,
 which names the traits the theme takes literally: 现代主义 / 极简主义, 大面积留白,

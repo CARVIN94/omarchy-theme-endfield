@@ -1,10 +1,13 @@
 # Section override for bar flyouts. The site's panel chrome is a hard 2px ink
-# rule rather than a hairline, so this theme asks for one too.
+# rule rather than a hairline, so this theme asks for one too — and the rule is
+# ink, not the accent: on paper the signal gold is a fill, and a gold outline
+# around every flyout would read as "here" on all of them at once. The [menu]
+# cards take the same token for the same reason.
 
 [popups]
 background       = "#F6F5EF"
 background-alpha = 1.0
 text             = "#191919"
-border           = "hyprland.active-border"
+border           = "hyprland.active-border-foreground"
 border-alpha     = 1.0
 border-width     = 2

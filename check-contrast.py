@@ -15,11 +15,17 @@ asserts WCAG contrast ratios:
   * every literal card pair in the theme's own shell.<section>.toml
     overrides — card text on the card, and selected-row text on
     the selected block — clears 7.0
+  * the surface pairs Omarchy's own templates actually compose:
+    `foreground` and `dark_foreground` on `dark_background` (hermes status
+    bar, t3code sidebar), `foreground` on `lighter_background` (helix focus
+    and highlight rows), and `accent` on `selection` (btop's selected row)
 
 Plus one structural rule about the bright row: a `bright_*` value is the softer
-step of its hue, so its luminance may not fall below its base by more than 1%
-(a bright slot darker than the colour it brightens reads as bold text getting
-heavier than body text).
+step of its hue, so its luminance must be strictly above its base (a bright slot
+darker than the colour it brightens reads as bold text getting heavier than body
+text). No tolerance: a bright step that lands within noise of its base is not a
+step at all — the dark variant shipped `#FFF84D` on `#FFFA00` and measured
+*below* its base, which the old 1% tolerance let through.
 
 Exit code 0 means the palette passes; 1 lists what it could not read.
 Run: uv run check-contrast.py [theme-dir]
@@ -40,7 +46,19 @@ TERMINAL = (
     "bright_blue", "bright_magenta",
 )
 BRIGHT_PAIRS = ("red", "yellow", "green", "cyan", "blue", "magenta")
-LUMA_TOLERANCE = 0.01
+
+# Foreground/background pairs the stock templates compose on surfaces other
+# than `background`. Only pairs a shipped template actually writes are here:
+# a surface nothing draws text on is a panel colour, not a text surface, and
+# gating it would force the palette darker than the design needs.
+SURFACE_PAIRS = (
+    ("hermes status bar: text", "foreground", "dark_background"),
+    ("hermes status bar: dim", "dark_foreground", "dark_background"),
+    ("hermes status bar: strong", "accent", "dark_background"),
+    ("t3code sidebar: text", "foreground", "dark_background"),
+    ("helix focus row: text", "foreground", "lighter_background"),
+    ("btop selected row: text", "accent", "selection"),
+)
 
 
 def srgb_to_linear(channel: float) -> float:
@@ -111,6 +129,8 @@ def main() -> int:
         checks.append((key, key, background, 4.5))
     checks.append(("foreground on selection", "foreground", selection, 7.0))
     checks.extend(shell_pairs(theme_dir))
+    for label, fg, against in SURFACE_PAIRS:
+        checks.append((label, fg, colours.get(against, background), 4.5))
 
     failures: list[str] = []
     width = max(len(label) for label, *_ in checks)
@@ -133,14 +153,14 @@ def main() -> int:
         if not is_hex(bright) or not is_hex(colours.get(hue)):
             continue
         base_luma, bright_luma = luminance(colours[hue]), luminance(bright)
-        verdict = "ok" if bright_luma >= base_luma - LUMA_TOLERANCE else "FAIL"
+        verdict = "ok" if bright_luma > base_luma else "FAIL"
         print(
             f"bright_{hue:<14} {bright} L={bright_luma:.4f} vs {colours[hue]} "
             f"L={base_luma:.4f}  {verdict}"
         )
         if verdict == "FAIL":
             failures.append(
-                f"bright_{hue}: L={bright_luma:.4f} is darker than "
+                f"bright_{hue}: L={bright_luma:.4f} is not lighter than "
                 f"{colours[hue]} L={base_luma:.4f}"
             )
 
