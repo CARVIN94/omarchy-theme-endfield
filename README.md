@@ -13,7 +13,6 @@
   <a href="#配色">配色</a> ·
   <a href="#设计规矩">设计规矩</a> ·
   <a href="#深色变体">深色变体</a> ·
-  <a href="#视频动态壁纸">动态壁纸</a> ·
   <a href="#闸门">闸门</a> ·
   <a href="ASSETS.md">素材出处</a>
 </p>
@@ -61,7 +60,6 @@ omarchy theme set endfield
 | `backgrounds/` | 三张纯色 4K：冷黑 `#111827`、次级纸 `#EDEBE1`，以及兜底 `omarchy.png`（纸白 `#F6F5EF`） |
 | `icons.theme`、`keyboard.rgb`、`chromium.theme` | Yaru-yellow 图标、信号黄键盘灯、纸白 Chromium 边框 |
 | `preview.png` | 主题切换器（`omarchy-theme-switcher` 按约定读它）的缩略图，由 `make-preview.sh` 从 `colors.toml` 生成 —— 纯配色卡，不含任何美术资源 |
-| `extras/endfield-video-wallpaper` | 可选的视频壁纸启动脚本，见[视频动态壁纸](#视频动态壁纸) |
 | `check-contrast.py`、`check-variant.py`、`check.sh` | 三道闸门 + 一个入口：颜色可读性、"变体必须是一整套"、缩略图没走样；`bash check.sh` 全跑一遍 |
 
 **故意不带 `.lua`、终端配置和 `vscode.json`。** Omarchy 会拒绝 stage 从 git 仓库
@@ -129,77 +127,6 @@ omarchy theme set theme-endfield
 `check-variant.py` 会在变体缺文件、缺键时变红，那种半套桌面不会静默回来。装好的主题是
 本仓库的 clone，回到纸白只要
 `git -C ~/.config/omarchy/themes/theme-endfield checkout -- .` 再 set 一次。
-
-## 视频动态壁纸
-
-Omarchy 自己的背景渲染器只会画静态图：`Background.qml` 用的是 QML `Image`，
-把 current-background 指向 `.mp4` 什么都不会显示。视频要另找一个 layer-shell
-播放器 —— `mpvpaper` 就够了，本主题只需要不挡它的路：它画在 `background` 层，
-和 Omarchy 背景服务同一层，同层内后创建的在上面；用 `hyprctl layers` 可以验证
-（期望看到 `... background: omarchy-background, mpvpaper`）。
-
-官方仓库没有这个包，但可以**全程用户级**编译，不碰 pacman：
-
-```bash
-uv tool install meson ninja
-git clone --depth 1 https://github.com/GhostNaN/mpvpaper
-cd mpvpaper && meson setup build --prefix="$HOME/.local" && ninja -C build install
-```
-
-参数里最关键的是 `-p -a MAX`：全屏或最大化窗口盖住壁纸时自动暂停 mpv，
-你在干活的时候它不烧 GPU。
-
-`-o` 的值要用 `$'...'` 换行分隔选项：mpvpaper 会把 `-o` 原样写进 mpv 配置文件
-再加载，而配置文件是每行一个选项；写成一行空格分隔只有第一个选项生效，其余被
-mpv 当 "unparsable extra characters" 丢掉（`loop` 一丢就是播完一遍就停）。
-
-```bash
-mpvpaper -p -a MAX -o $'no-audio\nhwdec=nvdec\npanscan=1.0\nloop' '*' /path/to/video.mp4
-```
-
-### 视频放哪、怎么换
-
-本仓库带一份可直接用的启动脚本，装到用户级 bin：
-
-```bash
-install -Dm755 extras/endfield-video-wallpaper ~/.local/bin/endfield-video-wallpaper
-```
-
-它只读一个目录：
-
-```bash
-~/.local/share/endfield-wallpaper/      # 视频都放这（mp4/webm/mkv/mov，文件名随意）
-```
-
-换视频就是**把文件丢进目录**：一个 → `loop` 循环播它；多个 → 自动写一份
-`.endfield-playlist.m3u`，`loop-playlist shuffle` 随机轮播。改完不用重登，
-重启那一个进程就行：
-
-```bash
-pkill -x mpvpaper && ~/.local/bin/endfield-video-wallpaper &
-```
-
-（必须 `-x`：`pkill -f mpvpaper` 会把执行这条命令的 shell 自己也匹上，连它一起杀。）
-
-### 先量视频宽度
-
-Pascal 及更老的 NVDEC 拒绝宽度超过 **4096** 的 H.264。4302×1920 的素材会静默回退软解，
-4K60 掉成幻灯片。直接问解码器：
-
-```bash
-mpv --no-config --no-audio --vo=null --hwdec=nvdec -v video.mp4 2>&1 | grep 'Failed setup for format cuda'
-```
-
-**没有输出就是没问题。** 有输出就重编到 3840 宽，同一个文件就能 60fps 零丢帧：
-
-```bash
-ffmpeg -i wide.mp4 -vf "scale=3840:-2:flags=lanczos" \
-  -c:v libx264 -preset veryfast -crf 20 -pix_fmt yuv420p -movflags +faststart video.mp4
-```
-
-随会话启动：`~/.config/hypr/autostart.lua` 加一行
-`o.launch_on_start("endfield-video-wallpaper")`。不想跑视频的人，
-`omarchy theme bg next` 照旧切静态背景。
 
 ## 闸门
 
